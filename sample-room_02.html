@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>房間</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-proxy-event-component/dist/aframe-proxy-event-component.min.js"></script>
+    <script src="aframe-render-order-component.js"></script>
+    <script src="enter-then-change-scene.js"></script>
+    <script src="aframe-maze.js"></script>
+	<script src="aframe-render-order-component.js"></script>
+    <script src="aframe-draw-shader.js"></script>
+	<script>
+		
+	</script>
+</head>
+
+<body>
+    <a-scene>
+        <a-assets>
+            <img id="city" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/img/city.jpg">
+            <img id="wall-color" src="images/Concrete_Wall_007_basecolor.jpg">
+            <img id="wall-normal" src="images/Concrete_Wall_007_normal.jpg">
+            <img id="floor-color" src="images/Metal_Floor_001_basecolor.jpg">
+            <img id="floor-normal" src="images/Metal_Floor_001_normal.jpg">
+        </a-assets>
+
+        <a-sky src="#city"></a-sky>
+
+        <a-entity id="cam-rig" position="12 0 0" rotation="0 180 0"  animation="property: position; from: 12 0 0; to: 12 0 15; easing: linear; dur: 5000;">
+            <a-camera>
+                <a-cursor raycaster="objects: [visible=true] [raycastable=true]" cursor="fuse: true; fuseTimeout: 1000"></a-cursor>
+                <a-sky id="fadePanel" render-order="9999" radius="0.3" color="#000" material="transparent: true; opacity: 0.0;"
+                    animation__fadeOut="property: material.opacity; startEvents: fadeOut; easing: linear; dur: 500; to: 1.0"
+                    animation__fadeIn="property: material.opacity; startEvents: fadeIn; easing: linear; dur: 500; to: 0.0"
+                ></a-sky>
+            </a-camera>
+        </a-entity>
+		
+		<a-entity id="scene1" scene visible="true" 
+		maze="
+            map: 
+                00010000000,
+				00010000000,
+				00010000000,
+				11111110000,
+				11111110000,
+				11111110000,
+				11111110000,
+				11111110000,
+				10010010000,
+				10010010000,
+				10010010000,
+				10010010000,
+				10010010000
+
+            roomSize: 6 6 6;
+            side: front;
+
+            colors: #fff, #fff, #2d4, #24d, #fff, #fff;
+
+            srcs: #wall-color, 
+                  #wall-color,
+                  #floor-color,
+                  #floor-color,
+                  #wall-color,
+                  #wall-color;
+
+            normalMaps: #wall-normal, 
+                        #wall-normal,
+                        #floor-normal,
+                        #floor-normal,
+                        #wall-normal,
+                        #wall-normal;
+
+            repeats: 1.5 1, 1.5 1, 1.5 1, 1 1, 1.5 1, 1.5 1;
+            normalTextureRepeats: 1.5 1, 1.5 1, 1.5 1, 1 1, 1.5 1, 1.5 1;
+
+            metalnesses: 0.1, 0.1, 0.7, 0.7, 0.1, 0.1;
+            roughnesses: 0.5, 0.5, 0.2, 0.2, 0.5, 0.5;
+
+            sphericalEnvMap: #city;">
+			<a-sky color="#0ff"></a-sky>
+			<a-sound src="audios/born.mp3" autoplay="true" position="12 0 0" loop="true"></a-sound>
+			<a-plane fuse-button
+                width="5" position="12 2 30.5" rotation="0 180 0" raycastable="true"
+                event-set="_event: click; raycastable: false; visible: false; _delay: 300;"
+                move-to="target: #cam-rig; position: 12 0 48; time: 5; startEvent: click; onEndEvent: done;">
+			</a-plane>
+			<a-plane fuse-button
+                width="5" position="24 2 30.5" rotation="0 180 0" raycastable="true"
+                event-set="_event: click; raycastable: false; visible: false; _delay: 300;"
+                move-to="target: #cam-rig; position: 24 0 48; time: 5; startEvent: click; onEndEvent: done;">
+			</a-plane>
+			<a-plane fuse-button
+                width="5" position="0 2 30.5" rotation="0 180 0" raycastable="true"
+                event-set="_event: click; raycastable: false; visible: false; _delay: 300;"
+                move-to="target: #cam-rig; position: 0 0 48; time: 5; startEvent: click; onEndEvent: done;">
+			</a-plane>
+			<a-box id="entrance1-1" height="6" width="6" depth="6" color="#0f0" material="opacity: 0" position="0 2 48" raycastable="true" event-set="_event: move0; visible: false; _delay: 300;" enter-then-change-scene="to: #scene2-1; fadePanel: #fadePanel; detectRange: 1 10 1;"
+			></a-box>
+			<a-box  id="entrance1-2" height="6" width="6" depth="6" color="#0f0" material="opacity: 0" position="12 2 48" raycastable="true" enter-then-change-scene="to: #scene2-2; fadePanel: #fadePanel; detectRange: 1 10 1;"
+            ></a-box>
+			<a-box id="entrance1-3" height="6" width="6" depth="6" color="#0f0"  material="opacity: 0" position="24 2 48" raycastable="true"
+                enter-then-change-scene="to: #scene2-3; fadePanel: #fadePanel; detectRange: 1 10 1;"
+            ></a-box>
+        </a-entity>
+        <a-entity id="scene2-1" scene visible="false" maze="
+            map: 
+                00010000000,
+				00010000000,
+				00010000000,
+				11111110000,
+				11111110000,
+				11111110000,
+				11111110000,
+				11111110000,
+				10010010000,
+				10010010000,
+				10010010000,
+				10010010000,
+				10010010000
+
+            roomSize: 6 6 6;
+            side: front;
+
+            colors: #fff, #fff, #2d4, #24d, #fff, #fff;
+
+            srcs: #wall-color, 
+                  #wall-color,
+                  #floor-color,
+                  #floor-color,
+                  #wall-color,
+                  #wall-color;
+
+            normalMaps: #wall-normal, 
+                        #wall-normal,
+                        #floor-normal,
+                        #floor-normal,
+                        #wall-normal,
+                        #wall-normal;
+
+            repeats: 1.5 1, 1.5 1, 1.5 1, 1 1, 1.5 1, 1.5 1;
+            normalTextureRepeats: 1.5 1, 1.5 1, 1.5 1, 1 1, 1.5 1, 1.5 1;
+
+            metalnesses: 0.1, 0.1, 0.7, 0.7, 0.1, 0.1;
+            roughnesses: 0.5, 0.5, 0.2, 0.2, 0.5, 0.5;
+
+            sphericalEnvMap: #city;
+        ">
+            <a-sky color="#f0f"></a-sky>
+<!--
+             <a-box height="6" width="6" depth="6" color="#0f0" position="0 2 48" raycastable="true"
+                change-scene="event: click; to: #scene3-1; fadePanel: #fadePanel;"
+            ></a-box>
+			  <a-box height="6" width="6" depth="6" color="#0f0" position="12 2 48" raycastable="true"
+                change-scene="event: click; to: #scene3-2; fadePanel: #fadePanel;"
+            ></a-box>
+			  <a-box height="6" width="6" depth="6" color="#0f0" position="24 2 48" raycastable="true"
+                change-scene="event: click; to: #scene3-3; fadePanel: #fadePanel;"
+            ></a-box>
+-->
+        </a-entity>
+		<a-entity id="scene2-2" scene visible="false" maze="
+            map: 
+                00010000000,
+				00010000000,
+				00010000000,
+				11111110000,
+				11111110000,
+				11111110000,
+				11111110000,
+				11111110000,
+				10010010000,
+				10010010000,
+				10010010000,
+				10010010000,
+				10010010000
+
+            roomSize: 6 6 6;
+            side: front;
+
+            colors: #000, #000 #2d4, #24d, #fff, #fff;
+
+            srcs: #wall-color, 
+                  #wall-color,
+                  #floor-color,
+                  #floor-color,
+                  #wall-color,
+                  #wall-color;
+<!--
+
+            normalMaps: #wall-normal, 
+                        #wall-normal,
+                        #floor-normal,
+                        #floor-normal,
+                        #wall-normal,
+                        #wall-normal;
+-->
+
+            repeats: 1.5 1, 1.5 1, 1.5 1, 1 1, 1.5 1, 1.5 1;
+            normalTextureRepeats: 1.5 1, 1.5 1, 1.5 1, 1 1, 1.5 1, 1.5 1;
+
+            metalnesses: 0.1, 0.1, 0.7, 0.7, 0.1, 0.1;
+            roughnesses: 0.5, 0.5, 0.2, 0.2, 0.5, 0.5;
+
+            sphericalEnvMap: #city;
+        ">
+            <a-sky color="#f0f"></a-sky>
+<!--
+             <a-box height="6" width="6" depth="6" color="#0f0" position="0 2 48" raycastable="true"
+                change-scene="event: click; to: #scene3-1; fadePanel: #fadePanel;"
+            ></a-box>
+			  <a-box height="6" width="6" depth="6" color="#0f0" position="12 2 48" raycastable="true"
+                change-scene="event: click; to: #scene3-2; fadePanel: #fadePanel;"
+            ></a-box>
+			  <a-box height="6" width="6" depth="6" color="#0f0" position="24 2 48" raycastable="true"
+                change-scene="event: click; to: #scene3-3; fadePanel: #fadePanel;"
+            ></a-box>
+-->
+        </a-entity>
+		<a-entity id="scene2-3" scene visible="false" maze="
+            map: 
+                00010000000,
+				00010000000,
+				00010000000,
+				01111100000,
+				01111100000,
+				01111100000,
+				01111100000,
+				01111100000,
+				01000100000,
+				01000100000,
+				01000100000,
+				01000100000,
+				01000100000
+
+            roomSize: 6 6 6;
+            side: front;
+
+            colors: #fff, #fff, #2d4, #24d, #fff, #fff;
+
+            srcs: #wall-color, 
+                  #wall-color,
+                  #floor-color,
+                  #floor-color,
+                  #wall-color,
+                  #wall-color;
+
+            normalMaps: #wall-normal, 
+                        #wall-normal,
+                        #floor-normal,
+                        #floor-normal,
+                        #wall-normal,
+                        #wall-normal;
+
+            repeats: 1.5 1, 1.5 1, 1.5 1, 1 1, 1.5 1, 1.5 1;
+            normalTextureRepeats: 1.5 1, 1.5 1, 1.5 1, 1 1, 1.5 1, 1.5 1;
+
+            metalnesses: 0.1, 0.1, 0.7, 0.7, 0.1, 0.1;
+            roughnesses: 0.5, 0.5, 0.2, 0.2, 0.5, 0.5;
+
+            sphericalEnvMap: #city;
+        ">
+            <a-sky color="#f0f"></a-sky>
+<!--
+             <a-box height="6" width="6" depth="6" color="#0f0" position="4 2 48" raycastable="true"
+                change-scene="event: click; to: #scene3-2; fadePanel: #fadePanel;"
+            ></a-box>
+			  <a-box height="6" width="6" depth="6" color="#0f0" position="20 2 48" raycastable="true"
+                change-scene="event: click; to: #scene3-3; fadePanel: #fadePanel;"
+            ></a-box>
+-->
+        </a-entity>
+    </a-scene>
+</body>
+
+</html>
