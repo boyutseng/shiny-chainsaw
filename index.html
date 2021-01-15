@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>用物件位置判斷場景切換</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-proxy-event-component/dist/aframe-proxy-event-component.min.js"></script>
+    <script src="aframe-render-order-component.js"></script>
+    <script src="aframe-draw-shader.js"></script>
+    <script src="aframe-move-to.js"></script>
+    <script src="enter-then-change-scene.js"></script>
+</head>
+
+<body>
+    <a-scene>
+
+        <a-entity id="cam-rig">
+            <a-camera wasd-controls="enabled: false">
+                <a-cursor cursor="fuse: true; fuseTimeout: 1000" raycaster="objects: [visible=true] [raycastable=true]"></a-cursor>
+                <a-sky id="fadePanel" render-order="9999" radius="0.3" color="#000" material="transparent: true; opacity: 0.0;"
+                    animation__fadeOut="property: material.opacity; startEvents: fadeOut; easing: linear; dur: 500; to: 1.0"
+                    animation__fadeIn="property: material.opacity; startEvents: fadeIn; easing: linear; dur: 500; to: 0.0"
+                ></a-sky>
+            </a-camera>
+        </a-entity>
+
+        <a-entity id="scene1" scene visible="true">
+            <a-sky color="#0ff"></a-sky>
+
+            <a-plane fuse-button
+                width="4" position="0 2 -12" raycastable="true"
+                event-set="_event: click; raycastable: false; visible: false; _delay: 300;"
+                move-to="target: #cam-rig; position: -3 0 -3; time: 5; startEvent: click; onEndEvent: done;"
+                >
+                <a-plane draw-text="text:到綠方塊; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+
+            <a-box color="#0f0" position="-3 0 -3" raycastable="true"
+                enter-then-change-scene="to: #scene2; fadePanel: #fadePanel; detectRange: 1 10 1;"
+            ></a-box>
+        </a-entity>
+
+        <a-entity id="scene2" scene visible="false">
+            <a-sky color="#f0f"></a-sky>
+
+            <a-plane fuse-button
+                width="4" position="0 2 -12" raycastable="true"
+                event-set="_event: click; raycastable: false; visible: false; _delay: 300;"
+                move-to="target: #cam-rig; position: 0 0 -3; time: 5; startEvent: click; onEndEvent: done;"
+                >
+                <a-plane draw-text="text:到藍方塊; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+
+            <a-box color="#00f" position="0 0 -3" raycastable="true"
+                enter-then-change-scene="to: #scene3; fadePanel: #fadePanel;"
+            ></a-box>
+        </a-entity>
+
+        <a-entity id="scene3" scene visible="false">
+            <a-sky color="#ff0"></a-sky>
+
+            <a-plane fuse-button
+                width="4" position="0 2 -12" raycastable="true"
+                event-set="_event: click; raycastable: false; visible: false; _delay: 300;"
+                move-to="target: #cam-rig; position: 3 0 -3; time: 5; startEvent: click; onEndEvent: done;"
+                >
+                <a-plane draw-text="text:到紅方塊; color: #fff" position="0 0 0.02"></a-plane>
+            </a-plane>
+
+            <a-box color="#f00" position="3 0 -3" raycastable="true"
+                enter-then-change-scene="to: #scene1; fadePanel: #fadePanel; detectRange: 1 10 1;"
+            ></a-box>
+        </a-entity>
+
+    </a-scene>
+</body>
+
+</html>
